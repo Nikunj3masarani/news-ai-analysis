@@ -8,6 +8,8 @@ from datetime import datetime
 load_dotenv(find_dotenv('.env'))
 
 api_key = os.environ.get("OPENAI_API_KEY")
+APP_TOKEN = os.environ.get("APP_TOKEN")
+
 MODEL="gpt-4o-mini"
 
 
@@ -34,17 +36,21 @@ def scrape_article(url):
 
 
 def main():
-    st.title("Stock News Analysis")
-    url = st.text_input("Enter News Article URL:")
-    if url:
-        with st.spinner("Scraping and analyzing..."):
-            try:
-                article_date, article_text = scrape_article(url)
-                analysis = generate_analysis(article_date, article_text)
-                st.subheader("Detailed Analysis")
-                st.write(analysis)
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+    app_token = st.text_input('App Token')
+    if  app_token and app_token == APP_TOKEN:
+        st.title("Stock News Analysis")
+        url = st.text_input("Enter News Article URL:")
+        if url:
+            with st.spinner("Scraping and analyzing..."):
+                try:
+                    article_date, article_text = scrape_article(url)
+                    analysis = generate_analysis(article_date, article_text)
+                    st.subheader("Detailed Analysis")
+                    st.write(analysis)
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+    else:
+        st.error("Valid Token is required")
 
 
 if __name__ == "__main__":
